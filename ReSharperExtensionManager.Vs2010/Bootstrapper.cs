@@ -7,7 +7,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager
     {
         public static void Initialise(Version resharperVersion)
         {
-            Initialise(resharperVersion, version => new ReSharperApi(version), resharperApi => new ExtensionLoader(resharperApi));
+            Initialise(resharperVersion, version => new ReSharperApi60(version), resharperApi => new ExtensionLoader(resharperApi));
         }
 
         public static void Initialise(Version resharperVersion, Func<Version, IReSharperApi> resharperApiFactory,
