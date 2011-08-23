@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using CitizenMatt.ReSharper.ExtensionManager.Implementation;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Tests
@@ -16,6 +17,10 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         {
             Initialised = true;
             continuation();
+        }
+
+        public void AddPlugin(string id, IEnumerable<string> assemblyFiles, bool enabled)
+        {
         }
 
         public bool Initialised { get; private set; }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 {
@@ -6,5 +7,6 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
     {
         Version Version { get; }
         void Initialise(Action onInitialised);
+        void AddPlugin(string id, IEnumerable<string> assemblyFiles, bool enabled);
     }
 }
