@@ -27,6 +27,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager
             var version = GetReSharperVersion(resharperPackageGuid);
             if (version == null)
                 return;
+
+            Bootstrapper.Initialise(version);
         }
 
         private Version GetReSharperVersion(Guid resharperPackageGuid)

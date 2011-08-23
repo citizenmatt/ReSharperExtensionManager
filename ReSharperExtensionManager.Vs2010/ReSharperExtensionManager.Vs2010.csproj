@@ -113,7 +113,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Implementation\ExtensionLoader.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="Implementation\IExtensionLoader.cs" />
+    <Compile Include="Implementation\IReSharperApi.cs" />
+    <Compile Include="Implementation\ReSharperApi.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
