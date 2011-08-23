@@ -1,0 +1,9 @@
+obj
+bin
+temp/
+_ReSharper.*
+*.user
+*.suo
+*.cache
+*.swp
+lib/ReSharper*
