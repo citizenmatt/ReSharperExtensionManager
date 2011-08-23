@@ -1,8 +1,9 @@
 ﻿// Guids.cs
 // MUST match guids.h
+
 using System;
 
-namespace citizenmatt.ReSharperExtensionManager_Vs2010
+namespace CitizenMatt.ReSharper.ExtensionManager
 {
     static class GuidList
     {
