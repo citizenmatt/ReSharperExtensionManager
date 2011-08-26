@@ -50,8 +50,6 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         {
             // TODO: There should probably be some kind of exception handling here
             var assemblies = (from path in assemblyFiles
-                              let extension = Path.GetExtension(path)
-                              where !string.IsNullOrEmpty(extension) && extension.ToLowerInvariant() == ".dll"
                               select new FileSystemPath(path)).ToList();
 
             var records = new List<PluginsDirectory.Record>();
