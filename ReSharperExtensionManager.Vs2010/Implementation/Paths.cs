@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace CitizenMatt.ReSharper.ExtensionManager
+namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 {
     public static class Paths
     {

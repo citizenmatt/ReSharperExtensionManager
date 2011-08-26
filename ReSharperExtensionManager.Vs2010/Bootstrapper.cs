@@ -1,6 +1,5 @@
 using System;
 using CitizenMatt.ReSharper.ExtensionManager.Implementation;
-using NuGet;
 
 namespace CitizenMatt.ReSharper.ExtensionManager
 {
@@ -8,7 +7,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager
     {
         public static void Initialise(Version resharperVersion)
         {
-            Initialise(resharperVersion, version => new ReSharperApi60(version), resharperApi => new ExtensionLoader(resharperApi, new LocalPackageRepository(Paths.LocalRepositoryRoot)));
+            Initialise(resharperVersion, version => new ReSharperApi60(version), ExtensionLoaderFactory.Create);
         }
 
         public static void Initialise(Version resharperVersion, Func<Version, IReSharperApi> resharperApiFactory,

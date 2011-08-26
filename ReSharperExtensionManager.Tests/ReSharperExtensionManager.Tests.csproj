@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="BootstrapperTests.cs" />
     <Compile Include="FakePlugin.cs" />
-    <Compile Include="FakeReSharperApi.cs" />
+    <Compile Include="Implementation\FakeReSharperApi.cs" />
     <Compile Include="Implementation\ExtensionLoaderTests.cs" />
     <Compile Include="Implementation\FakePackage.cs" />
     <Compile Include="Implementation\FakePackageFile.cs" />

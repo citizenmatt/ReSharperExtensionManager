@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using CitizenMatt.ReSharper.ExtensionManager.Implementation;
 
-namespace CitizenMatt.ReSharper.ExtensionManager.Tests
+namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 {
     public class FakeReSharperApi : IReSharperApi
     {

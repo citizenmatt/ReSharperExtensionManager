@@ -1,5 +1,6 @@
 ﻿using System;
 using CitizenMatt.ReSharper.ExtensionManager.Implementation;
+using CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation;
 using Moq;
 using Xunit;
 
