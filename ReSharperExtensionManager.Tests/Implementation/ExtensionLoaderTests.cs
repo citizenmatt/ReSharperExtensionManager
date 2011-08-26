@@ -27,43 +27,6 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             Assert.Equal(0, resharperApi.Plugins.Count);
         }
 
-        //[Fact]
-        //public void Should_not_add_plugin_if_no_files_in_version_specific_plugin_folder()
-        //{
-        //    var files = new List<string>
-        //                    {
-        //                        @"C:\temp\repo\test1-1.0.0.0\rs6.0\other\readme.txt"
-        //                    };
-        //    repository.AddPackage(new FakePackage("test1", files.ToArray()));
-        //    loader.LoadPlugins();
-        //    Assert.Equal(0, resharperApi.Plugins.Count);
-        //}
-
-        //[Fact]
-        //public void Should_not_add_plugin_if_no_files_in_correct_version_specific_plugin_folder()
-        //{
-        //    var files = new List<string>
-        //                    {
-        //                        @"C:\temp\repo\test1-1.0.0.0\rs5.0\other\readme.txt"
-        //                    };
-        //    repository.AddPackage(new FakePackage("test1", files.ToArray()));
-        //    loader.LoadPlugins();
-        //    Assert.Equal(0, resharperApi.Plugins.Count);
-        //}
-
-        //[Fact]
-        //public void Should_not_add_plugin_if_no_dlls_in_version_specific_plugin_folder()
-        //{
-        //    var files = new List<string>
-        //                    {
-        //                        @"C:\temp\repo\test1-1.0.0.0\rs6.0\plugins\readme.txt",
-        //                        @"C:\temp\repo\test1-1.0.0.0\rs6.0\plugins\boring.txt"
-        //                    };
-        //    repository.AddPackage(new FakePackage("test1", files.ToArray()));
-        //    loader.LoadPlugins();
-        //    Assert.Equal(0, resharperApi.Plugins.Count);
-        //}
-
         [Fact]
         public void Should_add_plugin_with_assembly_files()
         {
@@ -71,6 +34,23 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             var files = new List<string>
                             {
                                 @"rs6.0\plugins\plugin.dll"
+                            };
+            repository.AddPackage(new FakePackage(id, files.ToArray()));
+
+            loader.LoadPlugins();
+
+            Assert.Equal(1, resharperApi.Plugins.Count);
+            Assert.Equal(id, resharperApi.Plugins[0].Id);
+            Assert.Contains(files[0], resharperApi.Plugins[0].AssemblyFiles);
+        }
+
+        [Fact]
+        public void Should_add_plugin_with_assembly_files_with_different_case()
+        {
+            const string id = "test1";
+            var files = new List<string>
+                            {
+                                @"RS6.0\PLUGINS\plugin.dll"
                             };
             repository.AddPackage(new FakePackage(id, files.ToArray()));
 
