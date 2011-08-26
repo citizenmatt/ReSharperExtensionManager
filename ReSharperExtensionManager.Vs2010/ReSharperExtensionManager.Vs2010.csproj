@@ -141,6 +141,7 @@
     <Compile Include="Implementation\IExtensionLoader.cs" />
     <Compile Include="Implementation\IReSharperApi.cs" />
     <Compile Include="Implementation\ReSharperApi.6.0.cs" />
+    <Compile Include="Paths.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

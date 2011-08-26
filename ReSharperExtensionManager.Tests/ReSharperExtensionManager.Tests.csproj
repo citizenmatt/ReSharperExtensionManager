@@ -54,7 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootstrapperTests.cs" />
+    <Compile Include="FakePlugin.cs" />
     <Compile Include="FakeReSharperApi.cs" />
+    <Compile Include="Implementation\ExtensionLoaderTests.cs" />
+    <Compile Include="Implementation\FakePackage.cs" />
+    <Compile Include="Implementation\FakePackageFile.cs" />
+    <Compile Include="Implementation\FakePackageRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +71,7 @@
       <Name>ReSharperExtensionManager.Vs2010</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
