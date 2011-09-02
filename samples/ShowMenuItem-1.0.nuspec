@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>ShowMenuItem</id>
+    <version>1.0</version>
+    <authors>matt</authors>
+    <owners>matt</owners>
+    <licenseUrl>http://www.example.org/license</licenseUrl>
+    <projectUrl>http://www.example.org/project</projectUrl>
+    <iconUrl>http://www.example.org/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Sample plugin to add a menu item to the ReSharper menu</description>
+    <tags>plugin sample menu</tags>
+  </metadata>
+  <files>
+    <file src="ShowMenuItem\ShowMenuItem.rs60-v1.0\bin\Debug\**\*.*" target="rs60\plugins" />
+  </files>
+</package>

@@ -1,3 +1,4 @@
+using System.Linq;
 using NuGet;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
@@ -6,7 +7,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
     {
         public static IExtensionLoader Create(IReSharperApi resharperApi)
         {
-            return new ExtensionLoader(resharperApi, new LocalPackageRepository(Paths.LocalRepositoryRoot));
+            var dummySourceRepository = new AggregateRepository(Enumerable.Empty<IPackageRepository>());
+            return new ExtensionLoader(resharperApi, new PackageManager(dummySourceRepository, Paths.LocalRepositoryRoot));
         }
     }
 }

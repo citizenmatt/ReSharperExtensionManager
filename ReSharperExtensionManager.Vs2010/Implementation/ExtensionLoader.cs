@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using NuGet;
 
@@ -6,21 +7,22 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
     public class ExtensionLoader : IExtensionLoader
     {
         private readonly IReSharperApi resharperApi;
-        private readonly IPackageRepository localPackageRepository;
+        private readonly IPackageManager packageManager;
 
-        public ExtensionLoader(IReSharperApi resharperApi, IPackageRepository localPackageRepository)
+        public ExtensionLoader(IReSharperApi resharperApi, IPackageManager packageManager)
         {
             this.resharperApi = resharperApi;
-            this.localPackageRepository = localPackageRepository;
+            this.packageManager = packageManager;
         }
 
         public void LoadPlugins()
         {
-            var packages = localPackageRepository.GetPackages();
+            var packages = packageManager.LocalRepository.GetPackages();
             foreach (var package in packages)
             {
+                var packagePath = packageManager.PathResolver.GetInstallPath(package);
                 var assemblyFiles = (from packageFile in package.GetFiles(PluginFolder)
-                                     select packageFile.Path).ToList();
+                                     select Path.Combine(packagePath, packageFile.Path)).ToList();
                 if (assemblyFiles.Count > 0)
                     resharperApi.AddPlugin(package.Id, assemblyFiles, true);
             }
@@ -28,7 +30,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 
         private string PluginFolder
         {
-            get { return string.Format(@"rs{0}\plugins", resharperApi.Version.ToString(2)); }
+            get { return string.Format(@"rs{0}{1}\plugins", resharperApi.Version.Major, resharperApi.Version.Minor); }
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMenuItem.rs60", "ShowMenuItem.rs60\ShowMenuItem.rs60.csproj", "{31CB710A-FE7D-477C-808A-EC8F2A963AF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMenuItem.rs60-v1.0", "ShowMenuItem.rs60-v1.0\ShowMenuItem.rs60-v1.0.csproj", "{31CB710A-FE7D-477C-808A-EC8F2A963AF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMenuItem.rs60-v1.1", "ShowMenuItem.rs60-v1.1\ShowMenuItem.rs60-v1.1.csproj", "{EE67EAE0-FA3B-4FFB-BE9A-9DA9F2A797AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{31CB710A-FE7D-477C-808A-EC8F2A963AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31CB710A-FE7D-477C-808A-EC8F2A963AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31CB710A-FE7D-477C-808A-EC8F2A963AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE67EAE0-FA3B-4FFB-BE9A-9DA9F2A797AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE67EAE0-FA3B-4FFB-BE9A-9DA9F2A797AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE67EAE0-FA3B-4FFB-BE9A-9DA9F2A797AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE67EAE0-FA3B-4FFB-BE9A-9DA9F2A797AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

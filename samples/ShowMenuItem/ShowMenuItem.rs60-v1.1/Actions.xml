@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<actions xmlns="urn:shemas-jetbrains-com:actions-xml">
+  <action id="ShowMenuItem.Show" text="Sample MenuItem plugin" />
+
+  <insert group-id="ReSharper" position="last">
+    <separator />
+    <action-ref id="ShowMenuItem.Show" />
+  </insert>
+</actions>

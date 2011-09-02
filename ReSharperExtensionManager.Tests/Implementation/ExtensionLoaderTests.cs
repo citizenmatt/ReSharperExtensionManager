@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using CitizenMatt.ReSharper.ExtensionManager.Implementation;
+using NuGet;
 using Xunit;
 using System.Linq;
 
@@ -8,23 +10,35 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 {
     public class ExtensionLoaderTests
     {
+        private const string RepoPath = @"C:\temp\repo";
+
         private readonly ExtensionLoader loader;
         private readonly FakeReSharperApi resharperApi;
-        private readonly FakePackageRepository repository;
+        private readonly IPackageManager packageManager;
+        private readonly FakePackageRepository localRepository;
 
         public ExtensionLoaderTests()
         {
             resharperApi = new FakeReSharperApi(Version.Parse("6.0.0.0"));
-            repository = new FakePackageRepository(@"C:\temp\repo");
-            loader = new ExtensionLoader(resharperApi, repository);
+
+            localRepository = new FakePackageRepository(RepoPath);
+            var fileSystem = new PhysicalFileSystem(RepoPath);
+            var pathResolver = new DefaultPackagePathResolver(fileSystem);
+            packageManager = new PackageManager(new AggregateRepository(Enumerable.Empty<IPackageRepository>()), pathResolver, fileSystem, localRepository);
+            loader = new ExtensionLoader(resharperApi, packageManager);
         }
 
         [Fact]
         public void Should_not_add_plugins_if_repository_has_no_packages()
         {
-            Assert.Equal(0, repository.GetPackages().Count());
+            Assert.Equal(0, localRepository.GetPackages().Count());
             loader.LoadPlugins();
             Assert.Equal(0, resharperApi.Plugins.Count);
+        }
+
+        private string GetExtensionPath(string id, string path)
+        {
+            return Path.Combine(RepoPath, Path.Combine(id + ".0.0", path));
         }
 
         [Fact]
@@ -33,15 +47,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string id = "test1";
             var files = new List<string>
                             {
-                                @"rs6.0\plugins\plugin.dll"
+                                @"rs60\plugins\plugin.dll"
                             };
-            repository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
             loader.LoadPlugins();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(files[0], resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
@@ -50,15 +64,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string id = "test1";
             var files = new List<string>
                             {
-                                @"RS6.0\PLUGINS\plugin.dll"
+                                @"RS60\PLUGINS\plugin.dll"
                             };
-            repository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
             loader.LoadPlugins();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(files[0], resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
@@ -67,19 +81,19 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string id = "test1";
             var files = new List<string>
                             {
-                                @"rs6.0\plugins\plugin.netmodule",
-                                @"rs6.0\plugins\plugin.resource",
-                                @"rs6.0\plugins\plugin.manifest"
+                                @"rs60\plugins\plugin.netmodule",
+                                @"rs60\plugins\plugin.resource",
+                                @"rs60\plugins\plugin.manifest"
                             };
-            repository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
             loader.LoadPlugins();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(files[0], resharperApi.Plugins[0].AssemblyFiles);
-            Assert.Contains(files[1], resharperApi.Plugins[0].AssemblyFiles);
-            Assert.Contains(files[2], resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[1]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[2]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
@@ -88,17 +102,17 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string id = "test1";
             var files = new List<string>
                             {
-                                @"rs6.0\plugins\plugin.dll",
-                                @"rs6.1\plugins\plugin.dll"
+                                @"rs60\plugins\plugin.dll",
+                                @"rs61\plugins\plugin.dll"
                             };
-            repository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
             loader.LoadPlugins();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(files[0], resharperApi.Plugins[0].AssemblyFiles);
-            Assert.DoesNotContain(files[1], resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.DoesNotContain(GetExtensionPath(id, files[1]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
@@ -107,17 +121,17 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string id = "test1";
             var files = new List<string>
                             {
-                                @"rs6.0\plugins\plugin.dll",
-                                @"rs6.0\other\plugin.dll"
+                                @"rs60\plugins\plugin.dll",
+                                @"rs60\other\plugin.dll"
                             };
-            repository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
             loader.LoadPlugins();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(files[0], resharperApi.Plugins[0].AssemblyFiles);
-            Assert.DoesNotContain(files[1], resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.DoesNotContain(GetExtensionPath(id, files[1]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
@@ -126,9 +140,9 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string id = "test1";
             var files = new List<string>
                             {
-                                @"rs6.0\other\plugin.dll"
+                                @"rs60\other\plugin.dll"
                             };
-            repository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
             loader.LoadPlugins();
 
@@ -140,7 +154,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         {
             const string id = "test1";
 
-            repository.AddPackage(new FakePackage(id, @"rs6.0\plugins\plugin.dll"));
+            localRepository.AddPackage(new FakePackage(id, @"rs60\plugins\plugin.dll"));
 
             loader.LoadPlugins();
 
@@ -156,12 +170,12 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             const string packageId3 = "test3";
             const string packageId4 = "test4";
 
-            const string pluginFile = @"rs6.0\plugins\plugin.dll";
+            const string pluginFile = @"rs60\plugins\plugin.dll";
 
-            repository.AddPackage(new FakePackage(packageId1, pluginFile));
-            repository.AddPackage(new FakePackage(packageId2, pluginFile));
-            repository.AddPackage(new FakePackage(packageId3, pluginFile));
-            repository.AddPackage(new FakePackage(packageId4, pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId1, pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId2, pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId3, pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId4, pluginFile));
 
             loader.LoadPlugins();
 

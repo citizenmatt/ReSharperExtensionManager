@@ -10,6 +10,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [Guid(GuidList.VsPackageString)]
+    [ProvideAutoLoad(UIContextGuids.NoSolution)]
     public sealed class VsPackage : Package
     {
         public VsPackage()
