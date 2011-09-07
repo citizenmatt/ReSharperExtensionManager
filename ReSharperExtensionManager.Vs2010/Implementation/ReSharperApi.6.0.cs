@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.Application.PluginSupport;
@@ -47,8 +48,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 
         public void AddPlugin(string id, IEnumerable<string> assemblyFiles, bool enabled)
         {
-            // TODO: There should probably be some kind of exception handling here
             var assemblies = (from path in assemblyFiles
+                              where path.EndsWith(".dll", true, CultureInfo.InvariantCulture)
                               select new FileSystemPath(path)).ToList();
 
             var records = new List<PluginsDirectory.Record>();
@@ -57,6 +58,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
             var plugin = new Plugin(EternalLifetime.Instance, assemblies, null, pluginPresentation, null);
             plugin.IsEnabled.Value = enabled;
             plugin.RuntimeInfoRecords.AddRange(records);
+
             PluginsDirectory.Plugins.Add(plugin);
         }
 

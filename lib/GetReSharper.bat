@@ -50,12 +50,14 @@ if not exist "%ProgFiles%\JetBrains\Resharper\v6.0\bin" goto End
 mkdir ReSharper_v6.0
 cd ReSharper_v6.0
 
+copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Annotations.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.ActionManagement.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.ComponentModel.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.Metadata.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.Shell.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.UI.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.Util.???" > nul
+copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.Platform.ReSharper.VSIntegration.???" > nul
 copy "%ProgFiles%\JetBrains\ReSharper\v6.0\Bin\JetBrains.ReSharper.Resources.???" > nul
 cd ..
 echo Support for ReSharper 6.0 successfully copied.
