@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using JetBrains.Application;
 using JetBrains.Application.PluginSupport;
 using JetBrains.DataFlow;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.Threading;
 using JetBrains.Util;
 
@@ -34,32 +34,19 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
             initialisationTimer.IsEnabled.Value = true;
         }
 
-        // ReSharper 6.0 uses the PluginsDirectory.Plugins observable collection to keep
-        // track of plugins. The PluginLoader class sets up listeners on this collection
-        // to handle loading the plugins into the product (I'm not sure who loads the
-        // assemblies). The docs for PluginsDirectory state: "Plugins to be loaded are
-        // published here, by standard collectors like CollectPluginsInProductFolders
-        // and CollectPluginsOnCommandLine, or by you".
-        //
-        // I don't know where PluginManager lives in all of this. It looks like it still
-        // gets created and works as it used to, but only used by Internal stuff (there's
-        // an internal PluginDownloader namespace!) - the plugins page in the options
-        // uses the new PluginsDirectory class
-
         public void AddPlugin(string id, IEnumerable<string> assemblyFiles, bool enabled)
         {
-            var assemblies = (from path in assemblyFiles
-                              where path.EndsWith(".dll", true, CultureInfo.InvariantCulture)
-                              select new FileSystemPath(path)).ToList();
+            using (var loader = new MetadataLoader())
+            {
+                var pluginFiles = from file in assemblyFiles
+                                  select new JetTuple<string, FileSystemPath>(file, new FileSystemPath(file));
 
-            var records = new List<PluginsDirectory.Record>();
-            var pluginPresentation = PluginPresentation.ReadFromAssemblies(assemblies, null, records);
+                var plugins = DiscoverPluginsInDirectory.CreatePluginsFromFileSet(EternalLifetime.Instance, pluginFiles,
+                                                                                  GetComponent<IApplicationDescriptor>(),
+                                                                                  PluginsDirectory.InfoRecords, loader);
 
-            var plugin = new Plugin(EternalLifetime.Instance, assemblies, null, pluginPresentation, null);
-            plugin.IsEnabled.Value = enabled;
-            plugin.RuntimeInfoRecords.AddRange(records);
-
-            PluginsDirectory.Plugins.Add(plugin);
+                PluginsDirectory.Plugins.AddRange(plugins);
+            }
         }
 
         private static PluginsDirectory PluginsDirectory
