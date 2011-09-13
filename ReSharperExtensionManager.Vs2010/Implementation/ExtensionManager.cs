@@ -19,7 +19,11 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         public void InitialiseEnvironment()
         {
             LoadPlugins();
+            AddMenuItems();
+        }
 
+        private void AddMenuItems()
+        {
             resharperApi.AddManagerMenuItem("Manage Extensions...", () => MessageBox.ShowExclamation("Managing extensions!"));
         }
 
