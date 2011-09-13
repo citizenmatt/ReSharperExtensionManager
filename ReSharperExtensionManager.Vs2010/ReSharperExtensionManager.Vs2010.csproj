@@ -153,10 +153,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Implementation\ExtensionLoader.cs" />
+    <Compile Include="Implementation\ExtensionManager.cs" />
     <Compile Include="Guids.cs" />
-    <Compile Include="Implementation\ExtensionLoaderFactory.cs" />
-    <Compile Include="Implementation\IExtensionLoader.cs" />
+    <Compile Include="Implementation\ExtensionManagerFactory.cs" />
+    <Compile Include="Implementation\IExtensionManager.cs" />
     <Compile Include="Implementation\IReSharperApi.cs" />
     <Compile Include="Implementation\ReSharperApi.6.0.cs" />
     <Compile Include="Implementation\Paths.cs" />

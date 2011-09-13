@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.ActionManagement;
 using JetBrains.Application;
+using JetBrains.Application.DataContext;
 using JetBrains.Application.PluginSupport;
 using JetBrains.DataFlow;
 using JetBrains.Metadata.Reader.API;
@@ -49,15 +51,52 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
             }
         }
 
+        // TODO: Don't really like this - it knows too much
+        // But how would I abstract out the positioning of the menu in a resharper version agnostic manner?
+        public void AddManagerMenuItem(string label, Action action)
+        {
+            var executableAction = ActionManager.CreateAction("ShowExtensionManager", new ActionPresentation(label));
+            executableAction.AddHandler(EternalLifetime.Instance, new SimpleActionHandler(action));
+
+            var group = ActionManager.GetActionGroup("ReSharper");
+            var optionsIndex = group.GetActionIndex("ShowOptions");
+            group.InsertAction(optionsIndex, executableAction);
+        }
+
         private static PluginsDirectory PluginsDirectory
         {
             get { return GetComponent<PluginsDirectory>(); }
+        }
+
+        private static ActionManager ActionManager
+        {
+            get { return GetComponent<ActionManager>(); }
         }
 
         private static T GetComponent<T>()
             where T : class
         {
             return Shell.Instance.GetComponent<T>();
+        }
+
+        private class SimpleActionHandler : IActionHandler
+        {
+            private readonly Action action;
+
+            public SimpleActionHandler(Action action)
+            {
+                this.action = action;
+            }
+
+            public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
+            {
+                return true;
+            }
+
+            public void Execute(IDataContext context, DelegateExecute nextExecute)
+            {
+                action();
+            }
         }
     }
 }

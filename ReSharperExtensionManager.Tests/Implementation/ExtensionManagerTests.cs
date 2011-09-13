@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CitizenMatt.ReSharper.ExtensionManager.Implementation;
 using NuGet;
 using Xunit;
 using System.Linq;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 {
-    public class ExtensionLoaderTests
+    public class ExtensionManagerTests
     {
         private const string RepoPath = @"C:\temp\repo";
 
-        private readonly ExtensionLoader loader;
+        private readonly ExtensionManager.Implementation.ExtensionManager manager;
         private readonly FakeReSharperApi resharperApi;
         private readonly IPackageManager packageManager;
         private readonly FakePackageRepository localRepository;
 
-        public ExtensionLoaderTests()
+        public ExtensionManagerTests()
         {
             resharperApi = new FakeReSharperApi(Version.Parse("6.0.0.0"));
 
@@ -25,14 +24,14 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             var fileSystem = new PhysicalFileSystem(RepoPath);
             var pathResolver = new DefaultPackagePathResolver(fileSystem);
             packageManager = new PackageManager(new AggregateRepository(Enumerable.Empty<IPackageRepository>()), pathResolver, fileSystem, localRepository);
-            loader = new ExtensionLoader(resharperApi, packageManager);
+            manager = new ExtensionManager.Implementation.ExtensionManager(resharperApi, packageManager);
         }
 
         [Fact]
         public void Should_not_add_plugins_if_repository_has_no_packages()
         {
             Assert.Equal(0, localRepository.GetPackages().Count());
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
             Assert.Equal(0, resharperApi.Plugins.Count);
         }
 
@@ -51,7 +50,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
                             };
             localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
@@ -68,7 +67,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
                             };
             localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
@@ -87,7 +86,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
                             };
             localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
@@ -107,7 +106,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
                             };
             localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
@@ -126,7 +125,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
                             };
             localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
@@ -144,7 +143,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
                             };
             localRepository.AddPackage(new FakePackage(id, files.ToArray()));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(0, resharperApi.Plugins.Count);
         }
@@ -156,7 +155,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 
             localRepository.AddPackage(new FakePackage(id, @"rs60\plugins\plugin.dll"));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.True(resharperApi.Plugins[0].Enabled);
@@ -177,13 +176,23 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             localRepository.AddPackage(new FakePackage(packageId3, pluginFile));
             localRepository.AddPackage(new FakePackage(packageId4, pluginFile));
 
-            loader.LoadPlugins();
+            manager.InitialiseEnvironment();
 
             Assert.Equal(4, resharperApi.Plugins.Count);
             Assert.Equal(packageId1, resharperApi.Plugins[0].Id);
             Assert.Equal(packageId2, resharperApi.Plugins[1].Id);
             Assert.Equal(packageId3, resharperApi.Plugins[2].Id);
             Assert.Equal(packageId4, resharperApi.Plugins[3].Id);
+        }
+
+        [Fact]
+        public void Should_add_extenion_manager_menu_item()
+        {
+            manager.InitialiseEnvironment();
+
+            const string label = "Manage Extensions...";
+            Assert.True(resharperApi.Actions.ContainsKey(label));
+            Assert.NotNull(resharperApi.Actions[label]);
         }
     }
 }

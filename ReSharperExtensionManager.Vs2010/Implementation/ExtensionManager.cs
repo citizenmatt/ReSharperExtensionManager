@@ -1,21 +1,29 @@
 using System.IO;
 using System.Linq;
+using JetBrains.Util;
 using NuGet;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 {
-    public class ExtensionLoader : IExtensionLoader
+    public class ExtensionManager : IExtensionManager
     {
         private readonly IReSharperApi resharperApi;
         private readonly IPackageManager packageManager;
 
-        public ExtensionLoader(IReSharperApi resharperApi, IPackageManager packageManager)
+        public ExtensionManager(IReSharperApi resharperApi, IPackageManager packageManager)
         {
             this.resharperApi = resharperApi;
             this.packageManager = packageManager;
         }
 
-        public void LoadPlugins()
+        public void InitialiseEnvironment()
+        {
+            LoadPlugins();
+
+            resharperApi.AddManagerMenuItem("Manage Extensions...", () => MessageBox.ShowExclamation("Managing extensions!"));
+        }
+
+        private void LoadPlugins()
         {
             var packages = packageManager.LocalRepository.GetPackages();
             foreach (var package in packages)

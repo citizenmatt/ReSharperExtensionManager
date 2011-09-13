@@ -1,7 +1,7 @@
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 {
-    public interface IExtensionLoader
+    public interface IExtensionManager
     {
-        void LoadPlugins();
+        void InitialiseEnvironment();
     }
 }

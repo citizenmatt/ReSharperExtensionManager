@@ -10,6 +10,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         {
             Version = version;
             Plugins = new List<FakePlugin>();
+            Actions = new Dictionary<string, Action>();
         }
 
         public Version Version { get; private set; }
@@ -25,8 +26,13 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             Plugins.Add(new FakePlugin(id, assemblyFiles, enabled));
         }
 
-        public bool Initialised { get; private set; }
+        public void AddManagerMenuItem(string label, Action action)
+        {
+            Actions[label] = action;
+        }
 
+        public bool Initialised { get; private set; }
         public IList<FakePlugin> Plugins { get; private set; }
+        public IDictionary<string, Action> Actions { get; private set; }
     }
 }

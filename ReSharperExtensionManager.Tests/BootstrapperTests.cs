@@ -21,7 +21,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
                                                               resharperApiFactoryCalled = true;
                                                               capturedVersion = version;
                                                               return Mock.Of<IReSharperApi>();
-                                                          }, api => Mock.Of<IExtensionLoader>());
+                                                          }, api => Mock.Of<IExtensionManager>());
 
             Assert.True(resharperApiFactoryCalled);
             Assert.NotNull(capturedVersion);
@@ -32,7 +32,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         public void ShouldInitialiseResharperApi()
         {
             var resharperApi = new FakeReSharperApi(resharperVersion);
-            Bootstrapper.Initialise(resharperVersion, version => resharperApi, api => Mock.Of<IExtensionLoader>());
+            Bootstrapper.Initialise(resharperVersion, version => resharperApi, api => Mock.Of<IExtensionManager>());
 
             Assert.True(resharperApi.Initialised);
         }
@@ -48,7 +48,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
                                                                                    {
                                                                                        extensionLoaderFactoryCalled = true;
                                                                                        capturedApi = api;
-                                                                                       return Mock.Of<IExtensionLoader>();
+                                                                                       return Mock.Of<IExtensionManager>();
                                                                                    });
 
             Assert.True(extensionLoaderFactoryCalled);
@@ -60,11 +60,11 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         public void ShouldLoadPlugins()
         {
             var resharperApi = new FakeReSharperApi(resharperVersion);
-            var extensionLoader = new Mock<IExtensionLoader>();
+            var extensionLoader = new Mock<IExtensionManager>();
 
             Bootstrapper.Initialise(resharperVersion, version => resharperApi, api => extensionLoader.Object);
 
-            extensionLoader.Verify(loader => loader.LoadPlugins());
+            extensionLoader.Verify(loader => loader.InitialiseEnvironment());
         }
     }
 }

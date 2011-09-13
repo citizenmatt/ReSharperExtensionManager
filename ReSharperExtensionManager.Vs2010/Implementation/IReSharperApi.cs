@@ -8,5 +8,6 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         Version Version { get; }
         void Initialise(Action onInitialised);
         void AddPlugin(string id, IEnumerable<string> assemblyFiles, bool enabled);
+        void AddManagerMenuItem(string label, Action action);
     }
 }
