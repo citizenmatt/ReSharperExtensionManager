@@ -70,6 +70,12 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.ExtensionsExplorer, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionsExplorer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.ExtensionsExplorer.UI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.ExtensionsExplorer.UI.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
@@ -86,13 +92,16 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +165,31 @@
     <Compile Include="Implementation\ExtensionManager.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Implementation\ExtensionManagerFactory.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Controls\RatingControl.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Controls\StarControl.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Converters\CountToVisibilityConverter.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Converters\FixUrlConverter.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Converters\NormalizeTextConverter.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Converters\StringCollectionsToStringConverter.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\ExtensionManagerWindow.xaml.cs">
+      <DependentUpon>ExtensionManagerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Implementation\ExtensionManagerWindow\GalleryProvider.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\InstalledProvider.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\ExtensionManagerWindowCommands.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\IPackageItemCommandHandler.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Resources\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Implementation\ExtensionManagerWindow\RootTreeNode.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\SimpleTreeNode.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\Controls\TextBlockControl.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\UpdatesProvider.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\PackageItem.cs" />
     <Compile Include="Implementation\IExtensionManager.cs" />
     <Compile Include="Implementation\IReSharperApi.cs" />
     <Compile Include="Implementation\ReSharperApi.6.0.cs" />
@@ -170,6 +204,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Implementation\ExtensionManagerWindow\Resources\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -191,6 +230,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Package.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Implementation\ExtensionManagerWindow\DataTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Implementation\ExtensionManagerWindow\DataTemplateStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Implementation\ExtensionManagerWindow\ExtensionManagerWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using JetBrains.Util;
 using NuGet;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
@@ -24,7 +23,13 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 
         private void AddMenuItems()
         {
-            resharperApi.AddManagerMenuItem("Manage Extensions...", () => MessageBox.ShowExclamation("Managing extensions!"));
+            resharperApi.AddManagerMenuItem("Manage E&xtensions...", ShowExtensionManagerWindow);
+        }
+
+        private void ShowExtensionManagerWindow()
+        {
+            var window = new ExtensionManagerWindow.ExtensionManagerWindow(packageManager);
+            window.ShowModal();
         }
 
         private void LoadPlugins()

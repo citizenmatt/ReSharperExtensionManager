@@ -55,7 +55,10 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         // But how would I abstract out the positioning of the menu in a resharper version agnostic manner?
         public void AddManagerMenuItem(string label, Action action)
         {
-            var executableAction = ActionManager.CreateAction("ShowExtensionManager", new ActionPresentation(label));
+            // TODO: How do we remove the menu item when we're no longer installed?
+            // Adding like this leaves it in the ReSharper menu. I can remove it by creating a new action
+            // with the same ID and adding and removing it
+            var executableAction = ActionManager.CreateAction("CitizenMatt.ExtensionManger.ShowExtensionManager", new ActionPresentation(label));
             executableAction.AddHandler(EternalLifetime.Instance, new SimpleActionHandler(action));
 
             var group = ActionManager.GetActionGroup("ReSharper");

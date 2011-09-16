@@ -1,0 +1,71 @@
+﻿<vs:DialogWindow x:Class="CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManagerWindow.ExtensionManagerWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:vs="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.10.0"
+                 xmlns:vsext="clr-namespace:Microsoft.VisualStudio.ExtensionsExplorer.UI;assembly=Microsoft.VisualStudio.ExtensionsExplorer.UI"
+                 xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.10.0"
+                 xmlns:self="clr-namespace:CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManagerWindow"
+                 Title="ReSharper Extension Manager" 
+                 Background="{DynamicResource {x:Static vsshell:VsBrushes.EnvironmentBackgroundGradientKey}}"
+                 Height="600" Width="900"
+                 ShowInTaskbar="False"
+                 WindowStartupLocation="CenterOwner"
+                 MinHeight="450" MinWidth="800">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="DataTemplates.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static self:ExtensionManagerWindowCommands.PackageOperationCommand}" CanExecute="CanExecuteCommandOnPackage" Executed="ExecutedPackageCommand" />
+        <CommandBinding Command="ApplicationCommands.Close" Executed="OnClose" />
+        <CommandBinding Command="{x:Static self:ExtensionManagerWindowCommands.FocusOnSearchBox}" Executed="OnSetFocusOnSearchBox" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{x:Static self:ExtensionManagerWindowCommands.FocusOnSearchBox}" Gesture="CTRL+E" />
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="{DynamicResource {x:Static vsshell:VsBrushes.NewProjectBackgroundKey}}" Padding="0,0,0,4">
+            <vsext:VSExtensionsExplorerCtl x:Name="explorer"
+                                           ActiveView="MediumIcons"
+                                           HorizontalAlignment="Stretch"
+                                           SnapsToDevicePixels="True"
+                                           ListViewIsVirtualizing="True"
+                                           IsFxComboVisible="False"
+                                           IsMediumIconsViewButtonVisible="False"
+                                           IsSmallIconsViewButtonVisible="False"
+                                           IsLargeIconsViewButtonVisible="False"
+                                           CategorySelectionChanged="OnCategorySelectionChanged" />
+        </Border>
+
+        <Grid Grid.Row="2" MinHeight="50">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button 
+                Grid.Column="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Margin="12"
+                MinWidth="75" 
+                MinHeight="23" 
+                Padding="4,0,4,0"
+                Command="ApplicationCommands.Close" 
+                IsCancel="True" Content="Close" />
+        </Grid>
+    </Grid>
+</vs:DialogWindow>
+
