@@ -229,6 +229,7 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Implementation\ExtensionManagerWindow\Resources\packageicon.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
