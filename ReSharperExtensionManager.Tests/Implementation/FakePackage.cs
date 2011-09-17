@@ -8,10 +8,10 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 {
     public class FakePackage : IPackage
     {
-        public FakePackage(string id, params string[] files)
+        public FakePackage(string id, string version, params string[] files)
         {
             Id = id;
-            Version = new Version();
+            Version = Version.Parse(version);
             Authors = new List<string>();
             Owners = new List<string>();
             FrameworkAssemblies = new List<FrameworkAssemblyReference>();

@@ -17,19 +17,24 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 
         public void InitialiseEnvironment()
         {
+            RemoveDelayedDeletedExtensions();
             LoadPlugins();
             AddMenuItems();
         }
 
-        private void AddMenuItems()
+        private void RemoveDelayedDeletedExtensions()
         {
-            resharperApi.AddManagerMenuItem("Manage E&xtensions...", ShowExtensionManagerWindow);
-        }
+            var installedPackageDirectories = from package in packageManager.LocalRepository.GetPackages()
+                                              select packageManager.PathResolver.GetPackageDirectory(package);
+            var allFileSystemDirectories = packageManager.FileSystem.GetDirectories(string.Empty);
 
-        private void ShowExtensionManagerWindow()
-        {
-            var window = new ExtensionManagerWindow.ExtensionManagerWindow(packageManager);
-            window.ShowModal();
+            // How odd. Calling Except as an extension method gives a compiler error that XElement needs
+            // to included. Calling it as a static method works fine.
+            var delayedDeletedPackages = Enumerable.Except(allFileSystemDirectories, installedPackageDirectories);
+            foreach (var directory in delayedDeletedPackages.ToList())
+            {
+                packageManager.FileSystem.DeleteDirectory(directory, true);
+            }
         }
 
         private void LoadPlugins()
@@ -43,6 +48,17 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
                 if (assemblyFiles.Count > 0)
                     resharperApi.AddPlugin(package.Id, assemblyFiles, true);
             }
+        }
+
+        private void AddMenuItems()
+        {
+            resharperApi.AddManagerMenuItem("Manage E&xtensions...", ShowExtensionManagerWindow);
+        }
+
+        private void ShowExtensionManagerWindow()
+        {
+            var window = new ExtensionManagerWindow.ExtensionManagerWindow(packageManager);
+            window.ShowModal();
         }
 
         private string PluginFolder

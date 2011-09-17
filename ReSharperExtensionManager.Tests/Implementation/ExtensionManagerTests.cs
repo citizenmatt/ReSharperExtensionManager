@@ -15,13 +15,14 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         private readonly FakeReSharperApi resharperApi;
         private readonly IPackageManager packageManager;
         private readonly FakePackageRepository localRepository;
+        private readonly FakeFileSystem fileSystem;
 
         public ExtensionManagerTests()
         {
             resharperApi = new FakeReSharperApi(Version.Parse("6.0.0.0"));
 
             localRepository = new FakePackageRepository(RepoPath);
-            var fileSystem = new PhysicalFileSystem(RepoPath);
+            fileSystem = new FakeFileSystem(RepoPath);
             var pathResolver = new DefaultPackagePathResolver(fileSystem);
             packageManager = new PackageManager(new AggregateRepository(Enumerable.Empty<IPackageRepository>()), pathResolver, fileSystem, localRepository);
             manager = new ExtensionManager.Implementation.ExtensionManager(resharperApi, packageManager);
@@ -35,113 +36,118 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             Assert.Equal(0, resharperApi.Plugins.Count);
         }
 
-        private string GetExtensionPath(string id, string path)
+        private string GetExtensionPath(string id, string version, string path)
         {
-            return Path.Combine(RepoPath, Path.Combine(id + ".0.0", path));
+            return Path.Combine(RepoPath, Path.Combine(id + "." + version, path));
         }
 
         [Fact]
         public void Should_add_plugin_with_assembly_files()
         {
-            const string id = "test1";
+            const string id = "packageName";
+            const string version = "1.0";
             var files = new List<string>
                             {
                                 @"rs60\plugins\plugin.dll"
                             };
-            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, version, files.ToArray()));
 
             manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[0]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
         public void Should_add_plugin_with_assembly_files_with_different_case()
         {
-            const string id = "test1";
+            const string id = "packageName";
+            const string version = "1.0";
             var files = new List<string>
                             {
                                 @"RS60\PLUGINS\plugin.dll"
                             };
-            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, version, files.ToArray()));
 
             manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[0]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
         public void Should_add_plugin_with_all_assembly_files()
         {
-            const string id = "test1";
+            const string id = "packageName";
+            const string version = "1.0";
             var files = new List<string>
                             {
                                 @"rs60\plugins\plugin.netmodule",
                                 @"rs60\plugins\plugin.resource",
                                 @"rs60\plugins\plugin.manifest"
                             };
-            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, version, files.ToArray()));
 
             manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
-            Assert.Contains(GetExtensionPath(id, files[1]), resharperApi.Plugins[0].AssemblyFiles);
-            Assert.Contains(GetExtensionPath(id, files[2]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[1]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[2]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
         public void Should_only_add_plugin_files_from_correct_resharper_version_folder()
         {
-            const string id = "test1";
+            const string id = "packageName";
+            const string version = "1.0";
             var files = new List<string>
                             {
                                 @"rs60\plugins\plugin.dll",
                                 @"rs61\plugins\plugin.dll"
                             };
-            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, version, files.ToArray()));
 
             manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
-            Assert.DoesNotContain(GetExtensionPath(id, files[1]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.DoesNotContain(GetExtensionPath(id, version, files[1]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
         public void Should_only_add_plugin_files_from_versioned_plugin_folder()
         {
-            const string id = "test1";
+            const string id = "packageName";
+            const string version = "1.0";
             var files = new List<string>
                             {
                                 @"rs60\plugins\plugin.dll",
                                 @"rs60\other\plugin.dll"
                             };
-            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, version, files.ToArray()));
 
             manager.InitialiseEnvironment();
 
             Assert.Equal(1, resharperApi.Plugins.Count);
             Assert.Equal(id, resharperApi.Plugins[0].Id);
-            Assert.Contains(GetExtensionPath(id, files[0]), resharperApi.Plugins[0].AssemblyFiles);
-            Assert.DoesNotContain(GetExtensionPath(id, files[1]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.Contains(GetExtensionPath(id, version, files[0]), resharperApi.Plugins[0].AssemblyFiles);
+            Assert.DoesNotContain(GetExtensionPath(id, version, files[1]), resharperApi.Plugins[0].AssemblyFiles);
         }
 
         [Fact]
         public void Should_not_add_plugin_if_no_files_in_version_specific_plugin_folder()
         {
-            const string id = "test1";
+            const string id = "packageName";
             var files = new List<string>
                             {
                                 @"rs60\other\plugin.dll"
                             };
-            localRepository.AddPackage(new FakePackage(id, files.ToArray()));
+            localRepository.AddPackage(new FakePackage(id, "1.0", files.ToArray()));
 
             manager.InitialiseEnvironment();
 
@@ -151,9 +157,9 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         [Fact]
         public void Should_add_packages_as_enabled()
         {
-            const string id = "test1";
+            const string id = "packageName";
 
-            localRepository.AddPackage(new FakePackage(id, @"rs60\plugins\plugin.dll"));
+            localRepository.AddPackage(new FakePackage(id, "1.0", @"rs60\plugins\plugin.dll"));
 
             manager.InitialiseEnvironment();
 
@@ -171,10 +177,10 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 
             const string pluginFile = @"rs60\plugins\plugin.dll";
 
-            localRepository.AddPackage(new FakePackage(packageId1, pluginFile));
-            localRepository.AddPackage(new FakePackage(packageId2, pluginFile));
-            localRepository.AddPackage(new FakePackage(packageId3, pluginFile));
-            localRepository.AddPackage(new FakePackage(packageId4, pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId1, "1.0", pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId2, "1.0", pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId3, "1.0", pluginFile));
+            localRepository.AddPackage(new FakePackage(packageId4, "1.0", pluginFile));
 
             manager.InitialiseEnvironment();
 
@@ -186,13 +192,24 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         }
 
         [Fact]
-        public void Should_add_extenion_manager_menu_item()
+        public void Should_add_extension_manager_menu_item()
         {
             manager.InitialiseEnvironment();
 
-            const string label = "Manage Extensions...";
+            const string label = "Manage E&xtensions...";
             Assert.True(resharperApi.Actions.ContainsKey(label));
             Assert.NotNull(resharperApi.Actions[label]);
+        }
+
+        [Fact]
+        public void Should_delete_all_non_package_directories()
+        {
+            fileSystem.Files.Add(@"in_use_package.1.0\blah\blah\blah");
+            fileSystem.Files.Add(@"deleted_package.2.1\blah\blah\blah");
+
+            localRepository.AddPackage(new FakePackage("in_use_pacakge", "1.0", new[] { @"rs60\plugings\in_use_package.dll" })); 
+            
+            manager.InitialiseEnvironment();
         }
     }
 }
