@@ -98,6 +98,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Install.
+        /// </summary>
+        public static string Dialog_InstallButton {
+            get {
+                return ResourceManager.GetString("Dialog_InstallButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last Updated:.
         /// </summary>
         public static string Dialog_LastUpdatedLabel {

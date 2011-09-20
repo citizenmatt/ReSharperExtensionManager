@@ -1,55 +1,105 @@
+using System.ComponentModel;
+using System.Windows;
 using Microsoft.VisualStudio.ExtensionsExplorer;
+using Microsoft.VisualStudio.ExtensionsExplorer.UI;
 using NuGet;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManagerWindow
 {
-    public class GalleryProvider : IVsExtensionsProvider
+    public class GalleryProvider : VsExtensionsProvider, IPackageItemCommandHandler
     {
-        private readonly IPackageManager extensionManager;
+        private readonly IPackageManager packageManager;
+        private readonly ResourceDictionary resources;
+        private IVsExtensionsTreeNode extensionsTree;
+        private object mediumIconDataTemplate;
+        private object detailViewDataTemplate;
 
-        public GalleryProvider(IPackageManager extensionManager)
+        public GalleryProvider(IPackageManager packageManager, ResourceDictionary resources)
         {
-            this.extensionManager = extensionManager;
+            this.packageManager = packageManager;
+            this.resources = resources;
         }
 
-        public IVsExtensionsTreeNode Search(string searchTerms)
-        {
-            return null;
-        }
-
-        public string Name
+        public override string Name
         {
             get { return "Online Gallery"; }
         }
 
-        public float SortOrder
+        public override float SortOrder
         {
             get { return 200; }
         }
 
-        public object SmallIconDataTemplate
+        public override IVsExtensionsTreeNode ExtensionsTree
         {
-            get { return null; }
+            get
+            {
+                if (extensionsTree == null)
+                {
+                    extensionsTree = new RootTreeNode();
+                    extensionsTree.Nodes.Add(new SimpleTreeNode("All", extensionsTree, packageManager.SourceRepository, this)
+                                                 {IsSelected = true, IsExpanded = true});
+                }
+                return extensionsTree;
+            }
         }
 
-        public object MediumIconDataTemplate
+        public override object MediumIconDataTemplate
         {
-            get { return null; }
+            get { return mediumIconDataTemplate ?? (mediumIconDataTemplate = resources["PackageItemTemplate"]); }
         }
 
-        public object LargeIconDataTemplate
+        public override object DetailViewDataTemplate
         {
-            get { return null; }
+            get { return detailViewDataTemplate ?? (detailViewDataTemplate = resources["PackageDetailTemplate"]); }
         }
 
-        public object DetailViewDataTemplate
+        public string Label
         {
-            get { return null; }
+            get { return Resources.Resources.Dialog_InstallButton; }
         }
 
-        public IVsExtensionsTreeNode ExtensionsTree
+        public bool CanExecute(PackageItem item)
         {
-            get { return null; }
+            return !packageManager.LocalRepository.Exists(item.PackageIdentity);
+        }
+
+        public void Execute(PackageItem item)
+        {
+            var worker = new BackgroundWorker();
+            worker.DoWork += OnRunWorkerDoWork;
+            worker.RunWorkerCompleted += OnRunWorkerCompleted;
+            worker.RunWorkerAsync(item);
+        }
+
+        private void OnRunWorkerDoWork(object sender, DoWorkEventArgs e)
+        {
+            var item = (PackageItem)e.Argument;
+            var succeeded = ExecuteCore(item);
+            e.Cancel = !succeeded;
+            e.Result = item;
+        }
+
+        private void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                // TODO: Hide progress window
+                // TODO: Allow operations again
+                MessageBox.Show("Extension installed");
+            }
+            else
+                MessageBox.Show(string.Format("Error installing extension: {0}", e.Error));
+        }
+
+        private bool ExecuteCore(PackageItem item)
+        {
+            // TODO: Show progress window
+            // TODO: We're running async, stop other operations from happening
+            if (item.RequireLicenseAcceptance)
+                MessageBox.Show("Blah blah accept license blah blah");
+            packageManager.InstallPackage(item.PackageIdentity, false);
+            return true;
         }
     }
 }

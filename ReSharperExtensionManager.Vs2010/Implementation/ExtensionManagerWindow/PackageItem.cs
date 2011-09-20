@@ -8,10 +8,13 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
 {
     public class PackageItem : IVsExtension
     {
-        public PackageItem(IPackage package, string commandName)
+        private readonly IPackageItemCommandHandler commandHandler;
+
+        public PackageItem(IPackage package, IPackageItemCommandHandler commandHandler)
         {
+            this.commandHandler = commandHandler;
             PackageIdentity = package;
-            CommandName = commandName;
+            CommandName = commandHandler.Label;
         }
 
         public IPackage PackageIdentity { get; private set; }
@@ -86,7 +89,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
 
         public bool IsEnabled
         {
-            get { return true; }
+            get { return commandHandler.CanExecute(this); }
         }
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel;
-using System.IO;
 using System.Windows;
 using Microsoft.VisualStudio.ExtensionsExplorer;
 using Microsoft.VisualStudio.ExtensionsExplorer.UI;
@@ -27,6 +25,11 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
             get { return "Installed Extensions"; }
         }
 
+        public override float SortOrder
+        {
+            get { return 100; }
+        }
+
         public override IVsExtensionsTreeNode ExtensionsTree
         {
             get
@@ -34,7 +37,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
                 if (extensionsTree == null)
                 {
                     extensionsTree = new RootTreeNode();
-                    extensionsTree.Nodes.Add(new SimpleTreeNode("All", extensionsTree, packageManager, Resources.Resources.Dialog_UninstallButton)
+                    extensionsTree.Nodes.Add(new SimpleTreeNode("All", extensionsTree, packageManager.LocalRepository, this)
                                                  {IsSelected = true, IsExpanded = true});
                 }
                 return extensionsTree;
@@ -49,6 +52,16 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         public override object DetailViewDataTemplate
         {
             get { return detailViewDataTemplate ?? (detailViewDataTemplate = resources["PackageDetailTemplate"]); }
+        }
+
+        public string Label
+        {
+            get { return Resources.Resources.Dialog_UninstallButton; }
+        }
+
+        public bool CanExecute(PackageItem item)
+        {
+            return true;
         }
 
         public void Execute(PackageItem item)

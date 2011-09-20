@@ -2,6 +2,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
 {
     public interface IPackageItemCommandHandler
     {
+        string Label { get; }
+        bool CanExecute(PackageItem item);
         void Execute(PackageItem item);
     }
 }

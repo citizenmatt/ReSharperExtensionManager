@@ -7,7 +7,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
     {
         public static IExtensionManager Create(IReSharperApi resharperApi)
         {
-            var dummySourceRepository = new AggregateRepository(Enumerable.Empty<IPackageRepository>());
+            var dummySourceRepository = new LocalPackageRepository(@"C:\rsrepo");
             return new ExtensionManager(resharperApi, new PackageManager(dummySourceRepository, Paths.LocalRepositoryRoot));
         }
     }

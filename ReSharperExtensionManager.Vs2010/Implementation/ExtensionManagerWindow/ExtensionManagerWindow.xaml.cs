@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using JetBrains.Application.ExceptionReport;
 using Microsoft.VisualStudio.ExtensionsExplorer.UI;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using NuGet;
 using MessageBox = JetBrains.Util.MessageBox;
 
@@ -21,7 +18,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
             InitializeComponent();
 
             explorer.Providers.Add(new InstalledProvider(packageManager, Resources));
-            explorer.Providers.Add(new GalleryProvider(packageManager));
+            explorer.Providers.Add(new GalleryProvider(packageManager, Resources));
             explorer.Providers.Add(new UpdatesProvider(packageManager));
 
             explorer.SelectedProvider = explorer.Providers[0];
@@ -70,6 +67,9 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
                 e.CanExecute = false;
                 return;
             }
+
+            var provider = control.SelectedProvider as IPackageItemCommandHandler;
+            if (provider == null) return;
 
             try
             {

@@ -168,6 +168,9 @@
   <data name="Dialog_UninstallButton" xml:space="preserve">
     <value>_Uninstall</value>
   </data>
+  <data name="Dialog_InstallButton" xml:space="preserve">
+    <value>_Install</value>
+  </data>
   <data name="License_ViewLicense" xml:space="preserve">
     <value>View License Terms</value>
   </data>
