@@ -24,6 +24,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
             explorer.Providers.Add(new GalleryProvider(packageManager));
             explorer.Providers.Add(new UpdatesProvider(packageManager));
 
+            explorer.SelectedProvider = explorer.Providers[0];
+
             //explorer.BringExtensionIntoView();
             //explorer.CategorySelectionChanged+=
             explorer.IsDetailPaneVisible = true;
