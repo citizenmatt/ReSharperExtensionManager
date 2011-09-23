@@ -171,6 +171,9 @@
   <data name="Dialog_InstallButton" xml:space="preserve">
     <value>_Install</value>
   </data>
+  <data name="Dialog_UpdateButton" xml:space="preserve">
+    <value>_Update</value>
+  </data>
   <data name="License_ViewLicense" xml:space="preserve">
     <value>View License Terms</value>
   </data>

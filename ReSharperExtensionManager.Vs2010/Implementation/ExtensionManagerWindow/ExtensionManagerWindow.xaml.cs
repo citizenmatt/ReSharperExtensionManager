@@ -19,7 +19,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
 
             explorer.Providers.Add(new InstalledProvider(packageManager, Resources));
             explorer.Providers.Add(new GalleryProvider(packageManager, Resources));
-            explorer.Providers.Add(new UpdatesProvider(packageManager));
+            explorer.Providers.Add(new UpdatesProvider(packageManager, Resources));
 
             explorer.SelectedProvider = explorer.Providers[0];
 

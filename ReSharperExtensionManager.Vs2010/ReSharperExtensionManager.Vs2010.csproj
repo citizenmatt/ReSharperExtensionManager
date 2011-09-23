@@ -190,6 +190,7 @@
     <Compile Include="Implementation\ExtensionManagerWindow\Controls\TextBlockControl.cs" />
     <Compile Include="Implementation\ExtensionManagerWindow\UpdatesProvider.cs" />
     <Compile Include="Implementation\ExtensionManagerWindow\PackageItem.cs" />
+    <Compile Include="Implementation\ExtensionManagerWindow\UpdatesTreeNode.cs" />
     <Compile Include="Implementation\IExtensionManager.cs" />
     <Compile Include="Implementation\IReSharperApi.cs" />
     <Compile Include="Implementation\ReSharperApi.6.0.cs" />

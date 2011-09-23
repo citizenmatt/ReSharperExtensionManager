@@ -8,15 +8,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
 {
     public class SimpleTreeNode : IVsExtensionsTreeNode
     {
-        private readonly IPackageRepository packageRepository;
+        private readonly IPackageRepository packageManager;
         private readonly IPackageItemCommandHandler commandHandler;
         private IList<IVsExtension> extensions;
 
-        public SimpleTreeNode(string name, IVsExtensionsTreeNode parent, IPackageRepository packageRepository, IPackageItemCommandHandler commandHandler)
+        public SimpleTreeNode(string name, IVsExtensionsTreeNode parent, IPackageRepository packageManager, IPackageItemCommandHandler commandHandler)
         {
             Name = name;
             Parent = parent;
-            this.packageRepository = packageRepository;
+            this.packageManager = packageManager;
             this.commandHandler = commandHandler;
 
             Nodes = new ObservableCollection<IVsExtensionsTreeNode>();
@@ -33,12 +33,17 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
                 if (extensions == null)
                 {
                     extensions = new ObservableCollection<IVsExtension>();
-                    var packages = from package in packageRepository.GetPackages()
+                    var packages = from package in GetPackages()
                                    select new PackageItem(package, commandHandler);
                     extensions.AddRange(packages);
                 }
                 return extensions;
             }
+        }
+
+        protected virtual IQueryable<IPackage> GetPackages()
+        {
+            return packageManager.GetPackages();
         }
 
         public bool IsSearchResultsNode
