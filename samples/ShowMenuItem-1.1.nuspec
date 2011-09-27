@@ -10,6 +10,7 @@
     <iconUrl>http://www.example.org/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Sample plugin to add a menu item to the ReSharper menu</description>
+    <releaseNotes>No real changes. Just updated the version number to demonstrate updating</releaseNotes>
     <tags>plugin sample menu</tags>
   </metadata>
   <files>
