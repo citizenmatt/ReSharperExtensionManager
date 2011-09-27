@@ -34,8 +34,10 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         public bool RequireLicenseAcceptance { get; set; }
         public string Description { get; set; }
         public string Summary { get; set; }
+        public string ReleaseNotes { get; set; }
         public string Language { get; set; }
         public string Tags { get; set; }
+        public string Copyright { get; set; }
         public IEnumerable<FrameworkAssemblyReference> FrameworkAssemblies { get; set; }
         public IEnumerable<PackageDependency> Dependencies { get; set; }
         public Uri ReportAbuseUrl { get; set; }
@@ -53,6 +55,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             throw new NotSupportedException();
         }
 
+        public bool IsLatestVersion { get; set; }
+        public DateTimeOffset? Published { get; set; }
         public IEnumerable<IPackageAssemblyReference> AssemblyReferences { get; set; }
     }
 }

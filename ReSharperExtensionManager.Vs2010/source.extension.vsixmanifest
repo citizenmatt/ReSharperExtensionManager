@@ -3,7 +3,7 @@
   <Identifier Id="a32d3c3a-2b0e-4c64-bf33-4bb842e0f8f8">
     <Name>ReSharperExtensionManager.Vs2010</Name>
     <Author>Matt Ellis (@citizenmatt)</Author>
-    <Version>1.0</Version>
+    <Version>0.1</Version>
     <Description xml:space="preserve">Extension manager for ReSharper</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
@@ -20,13 +20,13 @@
     <Reference Id="Microsoft.VisualStudio.MPF" MinVersion="10.0">
       <Name>Visual Studio MPF</Name>
     </Reference>
-    <Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="1.4.20701.9038" MaxVersion="1.4.20701.9038">
-      <Name>NuGet Package Manager</Name>
-      <MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
-    </Reference>
     <Reference Id="JetBrains.ReSharper" MinVersion="6.0" MaxVersion="6.0">
       <Name>ReSharper</Name>
       <MoreInfoUrl>http://www.jetbrains.com/resharper/</MoreInfoUrl>
+    </Reference>
+    <Reference Id="NuPackToolsVsix.Microsoft.67e54e40-0ae3-42c5-a949-fddf5739e7a5" MinVersion="1.5.20902.9026" MaxVersion="1.5.20902.9026">
+      <Name>NuGet Package Manager</Name>
+      <MoreInfoUrl>http://docs.nuget.org/</MoreInfoUrl>
     </Reference>
   </References>
   <Content>
