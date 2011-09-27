@@ -10,14 +10,16 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
     {
         private readonly IPackageItemCommandHandler commandHandler;
 
-        public PackageItem(IPackage package, IPackageItemCommandHandler commandHandler)
+        public PackageItem(IPackage package, IPackageItemCommandHandler commandHandler, bool isUpdateItem)
         {
             this.commandHandler = commandHandler;
             PackageIdentity = package;
+            IsUpdateItem = isUpdateItem;
             CommandName = commandHandler.Label;
         }
 
         public IPackage PackageIdentity { get; private set; }
+        public bool IsUpdateItem { get; set; }
         public string CommandName { get; private set; }
 
         public string Name
@@ -30,9 +32,19 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
             get { return PackageIdentity.Id; }
         }
 
+        public bool ShouldDisplayReleaseNotes
+        {
+            get { return IsUpdateItem && !string.IsNullOrEmpty(ReleaseNotes); }
+        }
+
         public string Description
         {
             get { return PackageIdentity.Description; }
+        }
+
+        public string ReleaseNotes
+        {
+            get { return PackageIdentity.ReleaseNotes; }
         }
 
         public string Version

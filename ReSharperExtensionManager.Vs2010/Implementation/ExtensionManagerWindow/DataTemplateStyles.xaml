@@ -103,6 +103,10 @@
         <Setter Property="Margin" Value="0,3,0,0" />
         <Setter Property="Orientation" Value="Horizontal" />
     </Style>
+    <Style x:Key="DetailTextMetadataStyle" TargetType="{x:Type StackPanel}">
+        <Setter Property="Margin" Value="0,3,0,0" />
+        <Setter Property="Orientation" Value="Vertical" />
+    </Style>
     <Style x:Key="DetailHyperlinkTextBlockStyle" TargetType="{x:Type Controls:TextBlockControl}">
         <Setter Property="Margin" Value="0,3,0,0" />
     </Style>

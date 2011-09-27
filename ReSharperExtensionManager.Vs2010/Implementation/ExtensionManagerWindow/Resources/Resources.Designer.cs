@@ -80,6 +80,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description:.
+        /// </summary>
+        public static string Dialog_DescriptionLabel {
+            get {
+                return ResourceManager.GetString("Dialog_DescriptionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Downloads:.
         /// </summary>
         public static string Dialog_DownloadsLabel {
@@ -175,6 +184,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         public static string Dialog_RatingTooltip {
             get {
                 return ResourceManager.GetString("Dialog_RatingTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release Notes:.
+        /// </summary>
+        public static string Dialog_ReleaseNotesLabel {
+            get {
+                return ResourceManager.GetString("Dialog_ReleaseNotesLabel", resourceCulture);
             }
         }
         

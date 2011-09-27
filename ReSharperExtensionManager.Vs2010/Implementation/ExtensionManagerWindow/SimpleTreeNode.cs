@@ -34,11 +34,16 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
                 {
                     extensions = new ObservableCollection<IVsExtension>();
                     var packages = from package in GetPackages()
-                                   select new PackageItem(package, commandHandler);
+                                   select CreatePackageItem(package);
                     extensions.AddRange(packages);
                 }
                 return extensions;
             }
+        }
+
+        protected virtual PackageItem CreatePackageItem(IPackage package)
+        {
+            return new PackageItem(package, commandHandler, false);
         }
 
         protected virtual IQueryable<IPackage> GetPackages()

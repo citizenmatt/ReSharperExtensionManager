@@ -138,6 +138,12 @@
   <data name="Dialog_RatingLabel" xml:space="preserve">
     <value>Rating:</value>
   </data>
+  <data name="Dialog_DescriptionLabel" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="Dialog_ReleaseNotesLabel" xml:space="preserve">
+    <value>Release Notes:</value>
+  </data>
   <data name="Dialog_RatingTooltip" xml:space="preserve">
     <value>{0:f1} stars</value>
   </data>
