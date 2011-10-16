@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using CitizenMatt.ReSharper.ExtensionManager.Implementation;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
@@ -11,7 +12,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     [Guid(GuidList.VsPackageString)]
     [ProvideAutoLoad(UIContextGuids.NoSolution)]
-    public sealed class VsPackage : Package
+    public sealed class VsPackage : Package, IVisualStudioApi
     {
         public VsPackage()
         {
@@ -29,7 +30,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager
             if (version == null)
                 return;
 
-            Bootstrapper.Initialise(version);
+            Bootstrapper.Initialise(this, version);
         }
 
         private Version GetReSharperVersion(Guid resharperPackageGuid)
@@ -44,6 +45,12 @@ namespace CitizenMatt.ReSharper.ExtensionManager
             var vsShell = (IVsShell)GetService(typeof(IVsShell));
             vsShell.IsPackageLoaded(resharperPackageGuid, out package);
             return package;
+        }
+
+        public void Restart()
+        {
+            var service = (IVsShell4)GetService(typeof(IVsShell));
+            service.Restart((uint)__VSRESTARTTYPE.RESTART_Normal);
         }
     }
 }

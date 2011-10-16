@@ -7,11 +7,13 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
     public class ExtensionManager : IExtensionManager
     {
         private readonly IReSharperApi resharperApi;
+        private readonly IVisualStudioApi visualStudioApi;
         private readonly IPackageManager packageManager;
 
-        public ExtensionManager(IReSharperApi resharperApi, IPackageManager packageManager)
+        public ExtensionManager(IReSharperApi resharperApi, IVisualStudioApi visualStudioApi, IPackageManager packageManager)
         {
             this.resharperApi = resharperApi;
+            this.visualStudioApi = visualStudioApi;
             this.packageManager = packageManager;
         }
 
@@ -59,6 +61,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         {
             var window = new ExtensionManagerWindow.ExtensionManagerWindow(packageManager);
             window.ShowModal();
+            if (window.ShouldRestart)
+                visualStudioApi.Restart();
         }
 
         private string PluginFolder

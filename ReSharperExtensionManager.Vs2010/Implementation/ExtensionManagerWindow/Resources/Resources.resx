@@ -180,6 +180,9 @@
   <data name="Dialog_UpdateButton" xml:space="preserve">
     <value>_Update</value>
   </data>
+  <data name="Dialog_RestartRequired" xml:space="preserve">
+    <value>You must restart Microsoft Visual Studio in order for the changes to take effect.</value>
+  </data>
   <data name="License_ViewLicense" xml:space="preserve">
     <value>View License Terms</value>
   </data>

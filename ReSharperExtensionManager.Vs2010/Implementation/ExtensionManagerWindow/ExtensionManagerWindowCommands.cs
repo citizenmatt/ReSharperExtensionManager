@@ -9,5 +9,6 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         public readonly static RoutedCommand ShowOptionsPage = new RoutedCommand();
         public readonly static RoutedCommand FocusOnSearchBox = new RoutedCommand();
         public readonly static RoutedCommand OpenExternalLink = new RoutedCommand();
+        public readonly static RoutedCommand RestartVisualStudio = new RoutedCommand();
     }
 }

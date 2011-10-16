@@ -25,7 +25,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             fileSystem = new FakeFileSystem(RepoPath);
             var pathResolver = new DefaultPackagePathResolver(fileSystem);
             packageManager = new PackageManager(new AggregateRepository(Enumerable.Empty<IPackageRepository>()), pathResolver, fileSystem, localRepository);
-            manager = new ExtensionManager.Implementation.ExtensionManager(resharperApi, packageManager);
+            manager = new ExtensionManager.Implementation.ExtensionManager(resharperApi, null, packageManager);
         }
 
         [Fact]

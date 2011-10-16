@@ -195,6 +195,7 @@
     <Compile Include="Implementation\IReSharperApi.cs" />
     <Compile Include="Implementation\ReSharperApi.6.0.cs" />
     <Compile Include="Implementation\Paths.cs" />
+    <Compile Include="Implementation\IVisualStudioApi.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

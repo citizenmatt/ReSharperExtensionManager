@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.VisualStudio.ExtensionsExplorer.UI;
@@ -7,14 +8,12 @@ using MessageBox = JetBrains.Util.MessageBox;
 
 namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManagerWindow
 {
-    public partial class ExtensionManagerWindow
+    public partial class ExtensionManagerWindow : INotifyPropertyChanged
     {
-        private readonly IPackageManager packageManager;
+        private bool restartRequired;
 
         public ExtensionManagerWindow(IPackageManager packageManager)
         {
-            this.packageManager = packageManager;
-
             InitializeComponent();
 
             explorer.Providers.Add(new InstalledProvider(packageManager, Resources));
@@ -42,6 +41,20 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
             //explorer.SetFocusOnSearchBox();
         }
 
+        public bool RestartRequired
+        {
+            get { return restartRequired; }
+            set
+            {
+                if (value == restartRequired) return;
+
+                restartRequired = value;
+                PropertyChanged(this, new PropertyChangedEventArgs("RestartRequired"));
+            }
+        }
+
+        public bool ShouldRestart { get; private set; }
+
         private void OnClose(object sender, ExecutedRoutedEventArgs e)
         {
             Close();
@@ -50,6 +63,12 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         private void OnSetFocusOnSearchBox(object sender, ExecutedRoutedEventArgs e)
         {
             explorer.SetFocusOnSearchBox();
+        }
+
+        private void OnRestartVisualStudio(object sender, ExecutedRoutedEventArgs e)
+        {
+            ShouldRestart = true;
+            Close();
         }
 
         private void CanExecuteCommandOnPackage(object sender, CanExecuteRoutedEventArgs e)
@@ -101,6 +120,9 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
             try
             {
                 provider.Execute(selectedItem);
+
+                // Install, uninstall and update all require a restart
+                RestartRequired = true;
             }
             catch (Exception exception)
             {
@@ -111,11 +133,13 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         private void OnCategorySelectionChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             var simpleTreeNode = explorer.SelectedExtensionTreeNode as SimpleTreeNode;
-            if (simpleTreeNode != null)
+            var selectedTreeNodeProvider = explorer.SelectedProvider as ISelectedTreeNodeProvider;
+            if (simpleTreeNode != null && selectedTreeNodeProvider != null)
             {
-                var selectedTreeNodeProvider = explorer.SelectedProvider as ISelectedTreeNodeProvider;
                 selectedTreeNodeProvider.SelectedNode = simpleTreeNode;
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
     }
 }

@@ -206,6 +206,15 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation.ExtensionManager
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must restart Microsoft Visual Studio in order for the changes to take effect..
+        /// </summary>
+        public static string Dialog_RestartRequired {
+            get {
+                return ResourceManager.GetString("Dialog_RestartRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tags:.
         /// </summary>
         public static string Dialog_TagLabel {
