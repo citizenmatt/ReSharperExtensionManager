@@ -232,6 +232,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Implementation\ExtensionManagerWindow\Resources\packageicon.png" />
+    <Content Include="license.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

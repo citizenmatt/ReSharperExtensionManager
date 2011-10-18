@@ -3,9 +3,10 @@
   <Identifier Id="a32d3c3a-2b0e-4c64-bf33-4bb842e0f8f8">
     <Name>ReSharperExtensionManager.Vs2010</Name>
     <Author>Matt Ellis (@citizenmatt)</Author>
-    <Version>0.1</Version>
+    <Version>0.2</Version>
     <Description xml:space="preserve">Extension manager for ReSharper</Description>
     <Locale>1033</Locale>
+    <License>license.txt</License>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">
