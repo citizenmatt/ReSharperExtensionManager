@@ -13,12 +13,20 @@ namespace CitizenMatt.ReSharper.ExtensionManager
         public static void Initialise(IVisualStudioApi visualStudioApi, Version resharperVersion, Func<Version, IReSharperApi> resharperApiFactory,
             Func<IReSharperApi, IVisualStudioApi, IExtensionManager> extensionManagerFactory)
         {
+            IExtensionManager extensionManager = null;
+
             var resharperApi = resharperApiFactory(resharperVersion);
             resharperApi.Initialise(() =>
                                         {
-                                            var extensionManager = extensionManagerFactory(resharperApi, visualStudioApi);
+                                            extensionManager = extensionManagerFactory(resharperApi, visualStudioApi);
                                             extensionManager.InitialiseEnvironment();
-                                        });
+                                        },
+                                    () =>
+                                        {
+                                            if (extensionManager != null)
+                                                extensionManager.Dispose();
+                                        }
+                );
         }
     }
 }

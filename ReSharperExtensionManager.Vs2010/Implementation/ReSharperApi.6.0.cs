@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.ActionManagement;
+using JetBrains.Annotations;
 using JetBrains.Application;
+using JetBrains.Application.Components;
 using JetBrains.Application.DataContext;
 using JetBrains.Application.PluginSupport;
 using JetBrains.DataFlow;
@@ -14,6 +16,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 {
     public class ReSharperApi60 : IReSharperApi
     {
+        private const string ManagerActionId = "CitizenMatt.ExtensionManger.ShowExtensionManager";
+
         public ReSharperApi60(Version version)
         {
             Version = version;
@@ -21,7 +25,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
 
         public Version Version { get; private set; }
 
-        public void Initialise(Action onInitialised)
+        public void Initialise(Action onInitialised, Action onDispose)
         {
             var initialisationTimer = new ReentrancyGuardTimer("CitizenMatt.ReSharper.ExtensionManager.Initialisation");
             initialisationTimer.Interval.Value = TimeSpan.FromMilliseconds(100);
@@ -29,11 +33,24 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
                                                                           {
                                                                               if (Shell.HasInstance)
                                                                               {
+                                                                                  InitialiseCleanupHook(onDispose);
                                                                                   initialisationTimer.Dispose();
                                                                                   onInitialised();
                                                                               }
                                                                           });
             initialisationTimer.IsEnabled.Value = true;
+        }
+
+        private void InitialiseCleanupHook(Action onDispose)
+        {
+            var components = Shell.Instance.Components.ComponentContainer as ComponentContainer;
+            if (components != null)
+            {
+                components.Inject<CleanupHook>();
+
+                var cleanup = GetComponent<CleanupHook>();
+                cleanup.AddCleanupHook(onDispose);
+            }
         }
 
         public void AddPlugin(string id, IEnumerable<string> assemblyFiles, bool enabled)
@@ -58,12 +75,17 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
             // TODO: How do we remove the menu item when we're no longer installed?
             // Adding like this leaves it in the ReSharper menu. I can remove it by creating a new action
             // with the same ID and adding and removing it
-            var executableAction = ActionManager.CreateAction("CitizenMatt.ExtensionManger.ShowExtensionManager", new ActionPresentation(label));
+            var executableAction = ActionManager.CreateAction(ManagerActionId, new ActionPresentation(label));
             executableAction.AddHandler(EternalLifetime.Instance, new SimpleActionHandler(action));
 
             var group = ActionManager.GetActionGroup("ReSharper");
             var optionsIndex = group.GetActionIndex("ShowOptions");
             group.InsertAction(optionsIndex, executableAction);
+        }
+
+        public void RemoveManagerMenuItem()
+        {
+            ActionManager.RemoveAction(ManagerActionId);
         }
 
         private static PluginsDirectory PluginsDirectory
@@ -79,7 +101,8 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         private static T GetComponent<T>()
             where T : class
         {
-            return Shell.Instance.GetComponent<T>();
+            var instance = Shell.Instance;
+            return instance.GetComponent<T>();
         }
 
         private class SimpleActionHandler : IActionHandler
@@ -99,6 +122,22 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
             public void Execute(IDataContext context, DelegateExecute nextExecute)
             {
                 action();
+            }
+        }
+
+        [UsedImplicitly]
+        public class CleanupHook
+        {
+            private readonly Lifetime lifetime;
+
+            public CleanupHook(Lifetime lifetime)
+            {
+                this.lifetime = lifetime;
+            }
+
+            public void AddCleanupHook(Action action)
+            {
+                lifetime.AddAction(action);
             }
         }
     }

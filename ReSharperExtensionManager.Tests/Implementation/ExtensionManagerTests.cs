@@ -192,17 +192,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
         }
 
         [Fact]
-        public void Should_add_extension_manager_menu_item()
-        {
-            manager.InitialiseEnvironment();
-
-            const string label = "Manage E&xtensions...";
-            Assert.True(resharperApi.Actions.ContainsKey(label));
-            Assert.NotNull(resharperApi.Actions[label]);
-        }
-
-        [Fact]
-        public void Should_delete_all_non_package_directories()
+        public void Should_cleanup_all_unused_non_package_directories_during_initialisation()
         {
             fileSystem.Files.Add(@"in_use_package.1.0\blah\blah\blah");
             fileSystem.Files.Add(@"deleted_package.2.1\blah\blah\blah");
@@ -210,6 +200,26 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
             localRepository.AddPackage(new FakePackage("in_use_pacakge", "1.0", new[] { @"rs60\plugings\in_use_package.dll" })); 
             
             manager.InitialiseEnvironment();
+        }
+
+        [Fact]
+        public void Should_add_extension_manager_menu_item()
+        {
+            manager.InitialiseEnvironment();
+
+            const string label = "Manage E&xtensions...";
+            Assert.Equal(label, resharperApi.ManagerMenuItemLabel);
+            Assert.NotNull(resharperApi.ManagerMenuItemAction);
+        }
+
+        [Fact]
+        public void Should_remove_extension_manager_menu_item_on_dispose()
+        {
+            manager.InitialiseEnvironment();
+            manager.Dispose();
+
+            Assert.Equal(null, resharperApi.ManagerMenuItemLabel);
+            Assert.Null(resharperApi.ManagerMenuItemAction);
         }
     }
 }

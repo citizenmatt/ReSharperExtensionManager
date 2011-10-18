@@ -11,7 +11,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         private readonly Version rsVersion = Version.Parse("6.0.0.0");
 
         [Fact]
-        public void ShouldCreateCorrectVersionOfReSharperApi()
+        public void Should_create_correct_cersion_of_resharper_api()
         {
             var rsApiFactoryCalled = false;
             Version capturedVersion = null;
@@ -30,7 +30,7 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         }
 
         [Fact]
-        public void ShouldInitialiseResharperApi()
+        public void Should_initialise_resharper_api()
         {
             var rsApi = new FakeReSharperApi(rsVersion);
             var vsApi = Mock.Of<IVisualStudioApi>();
@@ -40,9 +40,9 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         }
 
         [Fact]
-        public void ShouldCreateExtensionLoaderAfterResharperApiIsInitialised()
+        public void Should_create_extension_manager_after_resharper_api_is_initialised()
         {
-            var extensionLoaderFactoryCalled = false;
+            var extensionManagerFactoryCalled = false;
             var rsApi = new FakeReSharperApi(rsVersion);
             var vsApi = Mock.Of<IVisualStudioApi>();
             IReSharperApi capturedRsApi = null;
@@ -50,13 +50,13 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
 
             Bootstrapper.Initialise(vsApi, rsVersion, version => rsApi, (rsapi, vsapi) =>
                                                                                    {
-                                                                                       extensionLoaderFactoryCalled = true;
+                                                                                       extensionManagerFactoryCalled = true;
                                                                                        capturedRsApi = rsapi;
                                                                                        capturedVsApi = vsapi;
                                                                                        return Mock.Of<IExtensionManager>();
                                                                                    });
 
-            Assert.True(extensionLoaderFactoryCalled);
+            Assert.True(extensionManagerFactoryCalled);
             Assert.NotNull(capturedRsApi);
             Assert.Equal(rsApi, capturedRsApi);
             Assert.NotNull(capturedVsApi);
@@ -64,15 +64,28 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests
         }
 
         [Fact]
-        public void ShouldLoadPlugins()
+        public void Should_load_plugins_at_initialisation()
         {
             var rsApi = new FakeReSharperApi(rsVersion);
             var vsApi = Mock.Of<IVisualStudioApi>();
-            var extensionLoader = new Mock<IExtensionManager>();
+            var extensionManager = new Mock<IExtensionManager>();
 
-            Bootstrapper.Initialise(vsApi, rsVersion, version => rsApi, (rsapi, vsapi) => extensionLoader.Object);
+            Bootstrapper.Initialise(vsApi, rsVersion, version => rsApi, (rsapi, vsapi) => extensionManager.Object);
 
-            extensionLoader.Verify(loader => loader.InitialiseEnvironment());
+            extensionManager.Verify(m => m.InitialiseEnvironment());
+        }
+
+        [Fact]
+        public void Should_dispose_of_extension_manager_when_resharper_api_terminates()
+        {
+            var rsApi = new FakeReSharperApi(rsVersion);
+            var vsApi = Mock.Of<IVisualStudioApi>();
+            var extensionManager = new Mock<IExtensionManager>();
+
+            Bootstrapper.Initialise(vsApi, rsVersion, version => rsApi, (rsapi, vsapi) => extensionManager.Object);
+            rsApi.FakeReSharperTermination();
+
+            extensionManager.Verify(m => m.Dispose());
         }
     }
 }

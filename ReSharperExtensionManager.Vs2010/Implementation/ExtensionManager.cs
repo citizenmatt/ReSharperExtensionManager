@@ -24,6 +24,11 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
             AddMenuItems();
         }
 
+        public void Dispose()
+        {
+            RemoveMenuItems();
+        }
+
         private void RemoveDelayedDeletedExtensions()
         {
             var installedPackageDirectories = from package in packageManager.LocalRepository.GetPackages()
@@ -55,6 +60,11 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Implementation
         private void AddMenuItems()
         {
             resharperApi.AddManagerMenuItem("Manage E&xtensions...", ShowExtensionManagerWindow);
+        }
+
+        private void RemoveMenuItems()
+        {
+            resharperApi.RemoveManagerMenuItem();
         }
 
         private void ShowExtensionManagerWindow()

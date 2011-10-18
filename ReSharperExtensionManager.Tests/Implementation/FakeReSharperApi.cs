@@ -6,17 +6,20 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 {
     public class FakeReSharperApi : IReSharperApi
     {
+        private Action onDisposeAction;
+
         public FakeReSharperApi(Version version)
         {
             Version = version;
             Plugins = new List<FakePlugin>();
-            Actions = new Dictionary<string, Action>();
         }
 
         public Version Version { get; private set; }
 
-        public void Initialise(Action continuation)
+        public void Initialise(Action continuation, Action onDispose)
         {
+            onDisposeAction = onDispose;
+
             Initialised = true;
             continuation();
         }
@@ -28,11 +31,25 @@ namespace CitizenMatt.ReSharper.ExtensionManager.Tests.Implementation
 
         public void AddManagerMenuItem(string label, Action action)
         {
-            Actions[label] = action;
+            ManagerMenuItemLabel = label;
+            ManagerMenuItemAction = action;
+        }
+
+        public void RemoveManagerMenuItem()
+        {
+            ManagerMenuItemLabel = null;
+            ManagerMenuItemAction = null;
+        }
+
+        public void FakeReSharperTermination()
+        {
+            if (onDisposeAction != null)
+                onDisposeAction();
         }
 
         public bool Initialised { get; private set; }
         public IList<FakePlugin> Plugins { get; private set; }
-        public IDictionary<string, Action> Actions { get; private set; }
+        public string ManagerMenuItemLabel { get; private set; }
+        public Action ManagerMenuItemAction { get; private set; }
     }
 }
